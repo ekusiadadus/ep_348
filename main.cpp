@@ -1,24 +1,27 @@
 void lambda() {
-  auto l = []([[maybe_unused]] int value, int &value2) -> long {
+  auto l = [](auto value, int &value2) -> long {
     return ++value + value2++;
   };
   long (*fp)(int, int &) = l;
 }
 
-struct Lambda {
-  using pointer_type = long (*)(int, int &);
-  constexpr static auto FUNC([[maybe_unused]] int value, int &value2) -> long {
+class Lambda {
+  template<typename T>
+  using pointer_type = long (*)(T, int &);
+
+  template<typename T>
+  constexpr static auto FUNC(T value, int &value2) -> long {
     return ++value + value2++;
   }
+
 public:
-  constexpr auto operator()([[maybe_unused]] int value, int &value2) const -> long {
+  template<typename T>
+  constexpr auto operator()(T value, int &value2) const -> long {
     return ++value + value2++;
   }
 
-  constexpr operator pointer_type() { return FUNC; }
+  template<typename T>
+  constexpr operator pointer_type<T>() const {
+    return FUNC;
+  }
 };
-
-void equivalent() {
-  auto l = Lambda{};
-  long (*fp)(int, int &) = l;
-}

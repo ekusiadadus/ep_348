@@ -1,13 +1,13 @@
 void lambda() {
-  auto l = [](int value){};
+  auto l = []([[maybe_unused]], int value, int &value2) {};
   l();
 }
 
 struct Lambda {
-  constexpr auto operator()(int value) const {}
+  constexpr auto operator()([[maybe_unused]], int value, int &value2) const {}
 };
 
 void equivalent() {
- auot l = Lambda{};
- l(42);
+  auot l = Lambda{};
+  l(42);
 }
